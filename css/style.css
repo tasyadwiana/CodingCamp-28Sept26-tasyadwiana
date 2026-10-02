@@ -1,0 +1,518 @@
+/* ============================================================
+   TASK 3.1 — Base layout and typography
+   Requirements: 7.2, 7.3
+   ============================================================ */
+
+/* --- Reset / Box-sizing ------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- Base typography --------------------------------------- */
+/* Minimum 14px body text; WCAG 2.1 AA contrast compliant font/bg pair */
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 16px; /* ≥ 14 px */
+  line-height: 1.5;
+  color: #1a1a1a; /* contrast > 4.5:1 on white */
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+/* --- Center-constrained page container -------------------- */
+/* Column flow: header → main sections */
+body > header,
+body > main,
+body > #toast {
+  width: 100%;
+}
+
+header,
+main {
+  max-width: 720px;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+/* --- Header / Balance display ------------------------------ */
+header {
+  background-color: #1f4e79;   /* deep blue — visually distinct */
+  color: #ffffff;
+  padding: 1.25rem 1rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 3px solid #155a99;
+}
+
+/* Expand max-width for the header to full viewport width with colour */
+body > header {
+  max-width: 100%;
+}
+
+header > h1 {
+  font-size: 1.375rem; /* ~22px */
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+#balance-display {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+#balance-value {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #a8d8ff; /* light blue — contrast > 4.5:1 on #1f4e79 */
+}
+
+/* --- Main sections layout --------------------------------- */
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-bottom: 2rem;
+}
+
+/* Shared section card style */
+#form-section,
+#list-section,
+#chart-section {
+  background-color: #ffffff;
+  border: 1px solid #d1d9e0;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   TASK 3.2 — Form, list, and chart component styles
+   Requirements: 2.3, 2.5, 7.2, 7.3
+   ============================================================ */
+
+/* --- Form -------------------------------------------------- */
+#transaction-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.field-group label {
+  font-size: 0.9375rem; /* 15px ≥ 14px */
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.field-group input,
+.field-group select {
+  font-size: 1rem;       /* 16px — prevents iOS zoom */
+  font-family: inherit;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid #b0bec5;
+  border-radius: 6px;
+  color: #1a1a1a;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  width: 100%;
+}
+
+/* Focus ring — WCAG 2.1 §2.4.7 visible focus */
+.field-group input:focus,
+.field-group select:focus {
+  outline: none;
+  border-color: #1f4e79;
+  box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.25);
+}
+
+/* Invalid state */
+.field-group input[aria-invalid="true"],
+.field-group select[aria-invalid="true"] {
+  border-color: #c0392b;
+}
+
+/* Submit button */
+#transaction-form button[type="submit"] {
+  align-self: flex-start;
+  padding: 0.625rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #ffffff;
+  background-color: #1f4e79;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  /* Minimum tap target 44×44px */
+  min-height: 44px;
+  min-width: 44px;
+}
+
+#transaction-form button[type="submit"]:hover {
+  background-color: #155a99;
+}
+
+#transaction-form button[type="submit"]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(31, 78, 121, 0.4);
+}
+
+/* --- Error spans ------------------------------------------ */
+/* Hidden by default via empty content collapsing — no min-height,
+   no display:none so screen readers still see them when populated */
+.error {
+  font-size: 0.875rem; /* 14px */
+  color: #c0392b;      /* contrast > 4.5:1 on white: ~5.8:1 */
+  min-height: 0;
+  line-height: 1.3;
+}
+
+/* Collapsed when empty — content:"" takes no space */
+.error:empty {
+  display: none;
+}
+
+/* --- Transaction list -------------------------------------- */
+#list-section h2 {
+  font-size: 1.0625rem; /* 17px */
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #2d3748;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sort-controls label {
+  font-weight: 600;
+}
+
+.sort-controls select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #b0bec5;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+#transaction-list {
+  list-style: none;
+  max-height: 320px;
+  overflow-y: auto;
+  /* Subtle inner scroll shadow */
+  background:
+    /* top shadow */
+    linear-gradient(white 30%, rgba(255,255,255,0)) center top,
+    /* bottom shadow */
+    linear-gradient(rgba(255,255,255,0), white 70%) center bottom,
+    /* scroll indicator top */
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.08), transparent) center top,
+    /* scroll indicator bottom */
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.08), transparent) center bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 40px, 100% 40px, 100% 8px, 100% 8px;
+  background-attachment: local, local, scroll, scroll;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+/* Each transaction row */
+#transaction-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.9375rem; /* 15px */
+  background-color: #ffffff;
+}
+
+#transaction-list li:last-child {
+  border-bottom: none;
+}
+
+#transaction-list li:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+/* Item name — grows to fill remaining space */
+.tx-name {
+  flex: 1 1 auto;
+  font-weight: 500;
+  color: #1a1a1a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Amount */
+.tx-amount {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: #1f4e79;
+  min-width: 5rem;
+  text-align: right;
+}
+
+/* Category badge */
+.tx-category {
+  flex: 0 0 auto;
+  font-size: 0.75rem;   /* 12px — label, not body text */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2em 0.55em;
+  border-radius: 999px;
+  background-color: #e8f0fe;
+  color: #1f4e79;       /* contrast ≥ 4.5:1 on #e8f0fe */
+}
+
+/* Delete button — min 44×44px tap target, distinct destructive style */
+.delete-btn {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 0.5rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 600;
+  color: #c0392b;
+  background-color: transparent;
+  border: 1.5px solid #c0392b;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.delete-btn:hover {
+  background-color: #c0392b;
+  color: #ffffff;
+}
+
+.delete-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.35);
+}
+
+/* Empty-state message */
+#empty-message {
+  font-size: 0.9375rem;
+  color: #718096;
+  text-align: center;
+  padding: 1rem 0;
+  font-style: italic;
+}
+
+/* --- Chart section ---------------------------------------- */
+#chart-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+#spending-chart {
+  max-width: 320px;
+  width: 100%;
+  height: auto;
+}
+
+#chart-placeholder {
+  font-size: 0.9375rem;
+  color: #718096;
+  font-style: italic;
+}
+
+/* --- Toast ------------------------------------------------- */
+/* Fixed overlay — hidden when empty */
+#toast {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  min-width: 260px;
+  max-width: min(480px, calc(100vw - 2rem));
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9375rem; /* 15px ≥ 14px */
+  font-weight: 500;
+  text-align: center;
+  pointer-events: none;
+  /* Collapsed (invisible + takes no space) when empty */
+  display: none;
+}
+
+/* Shown when content is present — JS adds class + content together */
+#toast:not(:empty) {
+  display: block;
+  animation: toast-in 0.2s ease;
+}
+
+/* Warning type */
+#toast.warning {
+  background-color: #fff3cd;
+  color: #7d4e00;    /* contrast ≥ 4.5:1 on #fff3cd */
+  border: 1.5px solid #ffc107;
+}
+
+/* Error type */
+#toast.error {
+  background-color: #fde8e8;
+  color: #7b1818;    /* contrast ≥ 4.5:1 on #fde8e8 */
+  border: 1.5px solid #c0392b;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* --- Responsive tweaks ------------------------------------- */
+@media (max-width: 480px) {
+  header > h1 {
+    font-size: 1.125rem;
+  }
+
+  #transaction-list li {
+    flex-wrap: wrap;
+  }
+
+  .tx-name {
+    flex-basis: 100%;
+  }
+
+  #transaction-form button[type="submit"] {
+    align-self: stretch;
+  }
+}
+
+#theme-toggle {
+  align-self: flex-start;
+  padding: 0.625rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  min-height: 44px;
+  min-width: 44px;
+}
+#theme-toggle:hover {
+  background-color: #ffffff;                    
+  color: #1f4e79;              
+  border-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-mode {
+  color: #f1f1f1;
+  background-color: #1a1a1a;
+}
+
+body.dark-mode #form-section,
+body.dark-mode #list-section,
+body.dark-mode #chart-section {
+  background-color: #2d2d2d;
+  border-color: #444;
+}
+
+body.dark-mode .field-group label,
+body.dark-mode #list-section h2 {
+  color: #f1f1f1;
+}
+
+body.dark-mode .field-group input,
+body.dark-mode .field-group select,
+body.dark-mode .limit-control input {
+  color: #f1f1f1;
+  background-color: #3a3a3a;
+  border-color: #666;
+}
+
+body.dark-mode #transaction-list li {
+  background-color: #2d2d2d;
+  border-color: #444;
+}
+
+body.dark-mode #transaction-list li:nth-child(even) {
+  background-color: #333;
+}
+
+body.dark-mode .tx-name {
+  color: #f1f1f1;
+}
+
+body.dark-mode #empty-message,
+body.dark-mode #chart-placeholder {
+  color: #bbb;
+}
+
+.custom-category {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.custom-category input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1.5px solid #b0bec5;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.custom-category button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #1f4e79;
+  background-color: #e8f0fe;
+  border: 1px solid #1f4e79;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.custom-category button:hover {
+  background-color: #d7e6fa;
+}
+
+body.dark-mode .custom-category input {
+  color: #f1f1f1;
+  background-color: #3a3a3a;
+  border-color: #666;
+}
+
+body.dark-mode .custom-category button {
+  color: #f1f1f1;
+  background-color: #444;
+  border-color: #777;
+}
